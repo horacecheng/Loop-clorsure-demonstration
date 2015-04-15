@@ -1,0 +1,97 @@
+$(document).ready(function() {
+    var carouselItems = [
+        { src: "images/image01.jpg", title: "Sample 01" },
+        { src: "images/image02.jpg", title: "Sample 02" },
+        { src: "images/image03.jpg", title: "Sample 03" },
+        { src: "images/image04.jpg", title: "Sample 04" },
+        { src: "images/image05.jpg", title: "Sample 05" }
+    ];
+
+    Carousel = function() {
+        // keep track of the current position
+        var position = 0;
+
+        // build carousel based on items in the carouselItems array
+        $(carouselItems).each(function(index, value){
+            var li = $('<li/>');
+            li.addClass('carousel-item');
+            li.css('width', 100 / carouselItems.length + '%');
+            li.appendTo($('#carousel'));
+
+            var img = $('<img/>');
+            img.attr('src', value.src);
+            img.appendTo(li);
+
+            var liDot = $('<li/>');
+            liDot.addClass('carousel-dots-nav-item').html('o');
+            liDot.appendTo($('#carousel-dots-nav'));
+        });
+
+        // increase width of the carousel
+        $('#carousel').css('width', carouselItems.length * 100 + '%');
+
+        // add events to dots
+        for (i = 0; i < $('.carousel-dots-nav-item').length; i++) {
+            var dot = $('.carousel-dots-nav-item')[i];
+
+            // show the title of the image when hovering the associated dot
+          	
+			$(dot).hover((function(i){
+			
+				return function(){$('#title').text(carouselItems[i].title);}
+			})(i),function(e){
+				$('#title').text('');
+				});
+			
+			
+			
+/* 			function mouseIn(i)
+			{
+				console.log(i);
+				return function(){$('#title').text(carouselItems[i].title);}	
+				
+			} */
+
+            // move to the appropriate slide when a dot is clicked
+            $(dot).click((
+				function(i)
+				{
+					console.log("click"+i);
+					return function(e){
+					position = i;
+                	$('#carousel').animate({
+                    left: -position * 100 + '%'
+                	}, 500);
+					}
+				}
+			
+			)(i));
+        }
+
+        // add click event to next button
+        $("#next").click(function(e){
+            e.preventDefault();
+
+            if (position == carouselItems.length - 1) return;
+
+            position++;
+            $('#carousel').animate({
+                left: -position * 100 + '%'
+            }, 500);
+        });
+
+        // add click event to previous button
+        $("#previous").click(function(e){
+            e.preventDefault();
+
+            if (position == 0) return;
+
+            position--;
+            $('#carousel').animate({
+                left: -position * 100 + '%'
+            }, 500);
+        });
+    };
+
+    var carousel = new Carousel();
+});
